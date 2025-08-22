@@ -1,0 +1,22 @@
+<h2 class="mb-4 text-xl font-semibold">History (latest 20)</h2>
+
+<div *ngIf="history().length === 0" class="text-slate-500">No history yet.</div>
+
+<ul class="divide-y divide-slate-200">
+  <li *ngFor="let h of history()"
+      class="py-3">
+    <div class="text-xs text-slate-500">{{ h.timestamp | date:'medium' }}</div>
+    <div class="mt-2 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div>
+        <div class="font-semibold">Input</div>
+        <pre class="rounded-lg bg-slate-50 p-2 text-xs whitespace-pre-wrap">{{ h.input }}</pre>
+      </div>
+      <div>
+        <div class="font-semibold">Output (Issue)</div>
+        <div class="text-sm text-slate-800">
+          {{ h.output?.issue || '—' }}
+        </div>
+      </div>
+    </div>
+  </li>
+</ul>

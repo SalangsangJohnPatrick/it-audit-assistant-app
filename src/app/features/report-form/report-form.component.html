@@ -1,0 +1,21 @@
+<h2 class="mb-4 text-xl font-semibold">Raw Notes / Test Results</h2>
+<div class="space-y-3">
+  <textarea rows="12" [formControl]="form.controls.bulletPoints"
+    placeholder="- Observation 1
+- Observation 2"></textarea>
+
+  <div class="flex items-center gap-3">
+    <button class="btn btn-primary" (click)="generate()">
+      <fa-icon icon="wand-magic-sparkles"></fa-icon>
+      Generate Findings
+    </button>
+    <button class="btn btn-ghost" type="button" (click)="clear()">
+      <fa-icon icon="broom"></fa-icon>
+      Clear
+    </button>
+  </div>
+
+  <div class="text-sm text-slate-500">
+    Tip: paste bullets, then click “Generate Findings”.
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<h2 class="mb-4 text-xl font-semibold">Generated Finding</h2>
+
+<div *ngIf="loading()" class="text-slate-600">Generating…</div>
+<div *ngIf="error()" class="rounded-lg border border-rose-200 bg-rose-50 p-3 text-rose-800">
+  {{ error() }}
+</div>
+
+<ng-container *ngIf="report() as r">
+  <div class="space-y-4">
+    <div>
+      <h3 class="mb-1 font-semibold">Issue</h3>
+      <p class="whitespace-pre-line">{{ r.issue }}</p>
+    </div>
+    <div>
+      <h3 class="mb-1 font-semibold">Risk</h3>
+      <p class="whitespace-pre-line">{{ r.risk }}</p>
+    </div>
+    <div>
+      <h3 class="mb-1 font-semibold">Recommendation</h3>
+      <ng-container *ngIf="isArray(r.recommendation); else asText">
+        <ul class="list-inside list-disc space-y-1">
+          <li *ngFor="let rec of r.recommendation as items">{{ rec }}</li>
+        </ul>
+      </ng-container>
+      <ng-template #asText>
+        <p class="whitespace-pre-line">{{ r.recommendation }}</p>
+      </ng-template>
+    </div>
+    <div>
+      <h3 class="mb-1 font-semibold">Root Cause</h3>
+      <p class="whitespace-pre-line">{{ r.root_cause }}</p>
+    </div>
+    <div>
+      <h3 class="mb-1 font-semibold">Management Response (placeholder)</h3>
+      <pre class="rounded-lg bg-slate-50 p-3 text-sm">{{ r.management_response }}</pre>
+    </div>
+  </div>
+</ng-container>
+
+<div *ngIf="!loading() && !error() && !report()" class="text-slate-500">
+  No output yet. Generate a finding to see it here.
+</div>

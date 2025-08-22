@@ -1,0 +1,74 @@
+import { Injectable, signal } from '@angular/core';
+import { ApiService } from './api.service';
+import { ReportState } from '../../models/audit-report.model';
+import { ToastService } from '../../shared/components/toast/toast.service';
+
+@Injectable({ providedIn: 'root' })
+export class ReportService {
+  readonly state = signal<ReportState>({
+    bulletPoints: '',
+    loading: false,
+    report: null,
+    error: null,
+    history: []
+  });
+
+  constructor(
+    private api: ApiService, 
+    public readonly toast: ToastService) {}
+
+  currentReport() { return this.state().report; }
+
+  setBulletPoints(v: string): void {
+    this.state.update(s => ({ ...s, bulletPoints: v }));
+  }
+
+  async generate(): Promise<void> {
+    const { bulletPoints } = this.state();
+    if (!bulletPoints?.trim()) {
+      this.toast.warn('Please enter bullet points first.');
+      return;
+    }
+    this.state.update(s => ({ ...s, loading: true, error: null }));
+    try {
+      const res = await this.api.generateReport({ bulletPoints }).toPromise();
+      if (!res) throw new Error('No response');
+      if (res.ok) {
+        const report = res.report;
+        this.state.update(s => ({
+          ...s,
+          report,
+          loading: false,
+          history: [{ timestamp: Date.now(), input: bulletPoints, output: report }, ...s.history].slice(0, 20)
+        }));
+        this.toast.success('Generated finding successfully');
+      } else {
+        throw new Error(res.error ?? 'Failed to generate');
+      }
+    } catch (err: any) {
+      const msg = err?.message ?? 'Unexpected error';
+      this.state.update(s => ({ ...s, error: msg, loading: false }));
+      this.toast.error(msg);
+    }
+  }
+
+  clear(): void {
+    this.state.update(s => ({ ...s, bulletPoints: '', report: null, error: null }));
+  }
+
+  formatCurrentForClipboard(): string | null {
+    const r = this.state().report;
+    if (!r) return null;
+    const rec = Array.isArray(r.recommendation)
+      ? r.recommendation.join('\n- ')
+      : r.recommendation;
+    return [
+      `Issue:\n${r.issue}`,
+      `Risk:\n${r.risk}`,
+      `Recommendation:\n${Array.isArray(r.recommendation) ? '- ' : ''}${rec}`,
+      `Root Cause:\n${r.root_cause}`,
+      `Management Response:\n${r.management_response}`
+    ].join('\n\n');
+  }
+}
+
