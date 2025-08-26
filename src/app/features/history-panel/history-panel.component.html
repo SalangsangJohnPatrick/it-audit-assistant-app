@@ -1,22 +1,46 @@
-<h2 class="mb-4 text-xl font-semibold">History (latest 20)</h2>
-
-<div *ngIf="history().length === 0" class="text-slate-500">No history yet.</div>
-
-<ul class="divide-y divide-slate-200">
-  <li *ngFor="let h of history()"
-      class="py-3">
-    <div class="text-xs text-slate-500">{{ h.timestamp | date:'medium' }}</div>
-    <div class="mt-2 grid grid-cols-1 gap-3 md:grid-cols-2">
-      <div>
-        <div class="font-semibold">Input</div>
-        <pre class="rounded-lg bg-slate-50 p-2 text-xs whitespace-pre-wrap">{{ h.input }}</pre>
-      </div>
-      <div>
-        <div class="font-semibold">Output (Issue)</div>
-        <div class="text-sm text-slate-800">
-          {{ h.output?.issue || '—' }}
+<div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-slate-50 border-b border-gray-100">
+    <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+        <i class="fas fa-history text-gray-600"></i>
+        History
+    </h2>
+</div>
+<div class="p-6">
+    <!-- Empty History State -->
+    <div *ngIf="history().length === 0" class="text-center py-8">
+        <div class="text-gray-300 mb-3">
+            <i class="fas fa-clock text-3xl"></i>
         </div>
-      </div>
+        <p class="text-gray-500">No history yet.</p>
+        <p class="text-sm text-gray-400 mt-1">Generated findings will appear here</p>
     </div>
-  </li>
-</ul>
+
+    <!-- History Items (hidden by default) -->
+    <ul class="hidden divide-y divide-gray-100 space-y-0">
+        <li *ngFor="let h of history()" class="py-4 first:pt-0">
+            <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
+                <i class="far fa-clock"></i>
+                <span>{{ h.timestamp | date: 'medium' }}</span>
+            </div>
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <div>
+                    <div class="font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                        <i class="fas fa-arrow-right text-blue-500 text-xs"></i>
+                        Input
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <pre class="text-xs text-gray-700 whitespace-pre-wrap font-mono">{{ h.input }}</pre>
+                    </div>
+                </div>
+                <div>
+                    <div class="font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                        <i class="fas fa-arrow-left text-emerald-500 text-xs"></i>
+                        Output
+                    </div>
+                    <div class="text-sm text-gray-700 bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                        {{ h.output?.issue || 'No output generated' }}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

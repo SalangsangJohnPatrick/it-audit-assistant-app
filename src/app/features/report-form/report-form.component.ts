@@ -21,12 +21,7 @@ export class ReportFormComponent {
 
   form = this.fb.nonNullable.group({
     bulletPoints: [
-      `- Default passwords remain enabled on admin accounts
-- MFA disabled for VPN users
-- Password policy exception for privileged roles
-- No periodic access review for terminated employees
-- Shared service account without logging`,
-      [Validators.required, Validators.minLength(5)]
+      "", [Validators.required, Validators.minLength(5)]
     ]
   });
 
