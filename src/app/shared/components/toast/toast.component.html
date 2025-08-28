@@ -10,12 +10,12 @@
        
     <div class="flex items-center gap-3">
       <!-- Icon -->
-      <i [ngClass]="{
-          'fas fa-check-circle': t.kind === 'success',
-          'fas fa-exclamation-circle': t.kind === 'error',
-          'fas fa-info-circle': t.kind === 'info',
-          'fas fa-exclamation-triangle': t.kind === 'warn'
-        }"></i>
+      <div class="text-white">
+        <fa-icon [icon]="['fas', 'circle-check']" *ngIf="t.kind === 'success'"></fa-icon>
+        <fa-icon [icon]="['fas', 'circle-exclamation']" *ngIf="t.kind === 'error'"></fa-icon>
+        <fa-icon [icon]="['fas', 'circle-info']" *ngIf="t.kind === 'info'"></fa-icon>
+        <fa-icon [icon]="['fas', 'triangle-exclamation']" *ngIf="t.kind === 'warn'"></fa-icon>
+      </div>
       
       <!-- Message -->
       <span class="text-sm text-white font-medium">{{ t.text }}</span>

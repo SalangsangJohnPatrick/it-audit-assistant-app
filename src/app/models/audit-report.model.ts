@@ -1,9 +1,8 @@
 export interface AuditReport {
   issue: string;
   risk: string;
-  recommendation: string | string[];
+  recommendation: string;
   root_cause: string;
-  management_response: string;
 }
 
 export interface GeneratePayload {

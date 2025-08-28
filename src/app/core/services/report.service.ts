@@ -14,8 +14,8 @@ export class ReportService {
   });
 
   constructor(
-    private api: ApiService, 
-    public readonly toast: ToastService) {}
+    private api: ApiService,
+    public readonly toast: ToastService) { }
 
   currentReport() { return this.state().report; }
 
@@ -59,15 +59,11 @@ export class ReportService {
   formatCurrentForClipboard(): string | null {
     const r = this.state().report;
     if (!r) return null;
-    const rec = Array.isArray(r.recommendation)
-      ? r.recommendation.join('\n- ')
-      : r.recommendation;
     return [
       `Issue:\n${r.issue}`,
       `Risk:\n${r.risk}`,
-      `Recommendation:\n${Array.isArray(r.recommendation) ? '- ' : ''}${rec}`,
-      `Root Cause:\n${r.root_cause}`,
-      `Management Response:\n${r.management_response}`
+      `Recommendation:\n${r.risk}`,
+      `Root Cause:\n${r.root_cause}`
     ].join('\n\n');
   }
 }

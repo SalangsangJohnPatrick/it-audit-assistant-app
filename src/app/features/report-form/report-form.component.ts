@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faWandMagicSparkles, faBroom } from '@fortawesome/free-solid-svg-icons';
 import { ReportService } from '../../core/services/report.service';
 
 @Component({
@@ -16,12 +15,9 @@ export class ReportFormComponent {
   private fb = inject(FormBuilder);
   readonly reportSvc = inject(ReportService);
 
-  faGen = faWandMagicSparkles;
-  faClear = faBroom;
-
   form = this.fb.nonNullable.group({
     bulletPoints: [
-      "", [Validators.required, Validators.minLength(5)]
+      '', [Validators.required, Validators.minLength(5)]
     ]
   });
 
