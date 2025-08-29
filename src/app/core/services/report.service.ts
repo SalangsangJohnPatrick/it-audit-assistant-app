@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { ApiService } from './api.service';
 import { ReportState } from '../../models/audit-report.model';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -15,9 +15,15 @@ export class ReportService {
 
   constructor(
     private api: ApiService,
-    public readonly toast: ToastService) { }
+    public readonly toast: ToastService
+  ) { }
 
   currentReport() { return this.state().report; }
+
+  hasInputOrOutput = computed(() => {
+    const { bulletPoints, report } = this.state();
+    return !!bulletPoints?.trim() || !!report;
+  });
 
   setBulletPoints(v: string): void {
     this.state.update(s => ({ ...s, bulletPoints: v }));
@@ -25,10 +31,6 @@ export class ReportService {
 
   async generate(): Promise<void> {
     const { bulletPoints } = this.state();
-    if (!bulletPoints?.trim()) {
-      this.toast.warn('Please enter bullet points first.');
-      return;
-    }
     this.state.update(s => ({ ...s, loading: true, error: null }));
     try {
       const res = await this.api.generateReport({ bulletPoints }).toPromise();
@@ -49,6 +51,7 @@ export class ReportService {
       const msg = err?.message ?? 'Unexpected error';
       this.state.update(s => ({ ...s, error: msg, loading: false }));
       this.toast.error(msg);
+      console.error(err);
     }
   }
 

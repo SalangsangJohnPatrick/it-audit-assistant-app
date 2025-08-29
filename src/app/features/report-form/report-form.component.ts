@@ -11,7 +11,7 @@ import { ReportService } from '../../core/services/report.service';
   templateUrl: './report-form.component.html',
   styleUrl: './report-form.component.css'
 })
-export class ReportFormComponent {
+export class ReportFormComponent {  
   private fb = inject(FormBuilder);
   readonly reportSvc = inject(ReportService);
 
@@ -25,7 +25,10 @@ export class ReportFormComponent {
 
   async generate(): Promise<void> {
     this.form.markAllAsTouched();
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.reportSvc.toast.warn('Please enter bullet points first.');
+      return;
+    };
     const bp = this.form.controls.bulletPoints.value.trim();
     this.reportSvc.setBulletPoints(bp);
     this.loading.set(true);

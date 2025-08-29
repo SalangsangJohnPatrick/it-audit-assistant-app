@@ -8,3 +8,6 @@ channel = "stable-24_05"
 [[ports]]
 localPort = 4200
 externalPort = 80
+
+[agent]
+expertMode = true
