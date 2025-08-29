@@ -4,7 +4,7 @@
         History
     </h2>
 </div>
-<div class="p-6">
+<div class="p-6 flex-1 overflow-auto">
     <!-- Empty History State -->
     <div *ngIf="history().length === 0" class="text-center py-8">
         <div class="text-gray-300 mb-3">
@@ -37,7 +37,7 @@
                         Output
                     </div>
                     <div class="text-xs text-gray-700 whitespace-pre-wrap font-mono bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                        {{ h.output?.issue || 'No output generated' }}
+                        {{ h.output?.risk || 'No output generated' }}
                     </div>
                 </div>
             </div>
