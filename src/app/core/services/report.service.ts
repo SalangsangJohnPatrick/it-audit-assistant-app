@@ -10,6 +10,7 @@ export class ReportService {
     loading: false,
     report: null,
     error: null,
+    error_message: null,
     history: []
   });
 
@@ -31,7 +32,7 @@ export class ReportService {
 
   async generate(): Promise<void> {
     const { bulletPoints } = this.state();
-    this.state.update(s => ({ ...s, loading: true, error: null }));
+    this.state.update(s => ({ ...s, loading: true, report: null, error: null }));
     try {
       const res = await this.api.generateReport({ bulletPoints }).toPromise();
       if (!res) throw new Error('No response');
@@ -43,15 +44,27 @@ export class ReportService {
           loading: false,
           history: [{ timestamp: Date.now(), input: bulletPoints, output: report }, ...s.history].slice(0, 20)
         }));
+        console.log('Generated report:', res.report);
         this.toast.success('Generated finding successfully');
       } else {
         throw new Error(res.error ?? 'Failed to generate');
       }
     } catch (err: any) {
-      const msg = err?.message ?? 'Unexpected error';
-      this.state.update(s => ({ ...s, error: msg, loading: false }));
-      this.toast.error(msg);
-      console.error(err);
+      if (err?.status === 0) {
+        this.state.update(s => ({
+          ...s,
+          error: 'Network Error: Failed to connect to server',
+          error_message: 'Please check your connection and try again',
+          loading: false
+        }));
+      } else {
+        this.state.update(s => ({
+          ...s,
+          error: err?.error.error,
+          error_message: err?.status + ' - ' + err?.statusText,
+          loading: false
+        }));
+      }
     }
   }
 

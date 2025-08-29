@@ -8,13 +8,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
 
   return next(req).pipe(
-    catchError((err: unknown) => {
-      const msg = err instanceof HttpErrorResponse
-        ? (err.error?.error || err.message || `HTTP ${err.status}`)
-        : 'Unexpected error';
+    catchError((err: HttpErrorResponse) => {
+      if (err.status === 0) {
+        toast.error('Network Error: Failed to connect to server');
+      } else {
+        toast.error(err.error?.error || err.message || `HTTP ${err.status}`);
+      }
 
-      toast.error(msg);
-      return throwError(() => err); // always rethrow
+      console.log(err)
+
+      return throwError(() => err);
     })
   );
 };

@@ -14,6 +14,7 @@ export interface ReportState {
   loading: boolean;
   report: AuditReport | null;
   error: string | null;
+  error_message: string | null
   history: {
     timestamp: number;
     input: string;
