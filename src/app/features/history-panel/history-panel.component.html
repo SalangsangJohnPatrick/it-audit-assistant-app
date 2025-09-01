@@ -5,7 +5,6 @@
     </h2>
 </div>
 <div class="p-6 flex-1 overflow-auto">
-    <!-- Empty History State -->
     <div *ngIf="history().length === 0" class="text-center py-8">
         <div class="text-gray-300 mb-3">
             <i class="fas fa-clock text-3xl"></i>
@@ -14,7 +13,6 @@
         <p class="text-sm text-gray-400 mt-1">Generated findings will appear here</p>
     </div>
 
-    <!-- History Items -->
     <ul class="divide-y divide-gray-100 space-y-0">
         <li *ngFor="let h of history()" class="py-4 first:pt-0">
             <div class="flex items-center gap-2 text-xs text-gray-500 mb-3">
@@ -36,8 +34,8 @@
                         <i class="fas fa-arrow-left text-emerald-500 text-xs"></i>
                         Output
                     </div>
-                    <div class="text-xs text-gray-700 whitespace-pre-wrap font-mono bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                        {{ h.output?.risk || 'No output generated' }}
+                    <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                        <pre class="text-xs text-gray-700 whitespace-pre-wrap font-mono">{{ h.output?.risk || 'No output generated' }}</pre>
                     </div>
                 </div>
             </div>
