@@ -6,7 +6,7 @@ import { ToastService } from '../../shared/components/toast/toast.service';
 @Injectable({ providedIn: 'root' })
 export class ReportService {
   readonly state = signal<ReportState>({
-    bulletPoints: '',
+    finding: '',
     loading: false,
     report: null,
     error: null,
@@ -22,19 +22,19 @@ export class ReportService {
   currentReport() { return this.state().report; }
 
   hasInputOrOutput = computed(() => {
-    const { bulletPoints, report } = this.state();
-    return !!bulletPoints?.trim() || !!report;
+    const { finding, report } = this.state();
+    return !!finding?.trim() || !!report;
   });
 
-  setBulletPoints(v: string): void {
-    this.state.update(s => ({ ...s, bulletPoints: v }));
+  setFinding(v: string): void {
+    this.state.update(s => ({ ...s, finding: v }));
   }
 
   async generate(): Promise<void> {
-    const { bulletPoints } = this.state();
+    const { finding } = this.state();
     this.state.update(s => ({ ...s, loading: true, report: null, error: null }));
     try {
-      const res = await this.api.generateReport({ bulletPoints }).toPromise();
+      const res = await this.api.generateReport({ finding }).toPromise();
       if (!res) throw new Error('No response');
       if (res.ok) {
         const report = res.report;
@@ -42,7 +42,7 @@ export class ReportService {
           ...s,
           report,
           loading: false,
-          history: [{ timestamp: Date.now(), input: bulletPoints, output: report }, ...s.history].slice(0, 20)
+          history: [{ open: false, timestamp: Date.now(), input: finding, output: report }, ...s.history].slice(0, 20)
         }));
         console.log('Generated report:', res.report);
         this.toast.success('Generated finding successfully');
@@ -69,17 +69,17 @@ export class ReportService {
   }
 
   clear(): void {
-    this.state.update(s => ({ ...s, bulletPoints: '', report: null, error: null }));
+    this.state.update(s => ({ ...s, finding: '', report: null, error: null }));
   }
 
   formatCurrentForClipboard(): string | null {
     const r = this.state().report;
     if (!r) return null;
     return [
-      `Issue:\n${r.issue}`,
-      `Risk:\n${r.risk}`,
-      `Recommendation:\n${r.risk}`,
-      `Root Cause:\n${r.root_cause}`
+      `Issue:\n${r.issues}`,
+      `Risk:\n${r.risks}`,
+      `Recommendation:\n${r.risks}`,
+      `Root Cause:\n${r.root_causes}`
     ].join('\n\n');
   }
 }

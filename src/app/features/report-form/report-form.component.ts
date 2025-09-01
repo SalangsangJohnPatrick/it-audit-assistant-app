@@ -30,7 +30,7 @@ export class ReportFormComponent {
       return;
     };
     const bp = this.form.controls.bulletPoints.value.trim();
-    this.reportSvc.setBulletPoints(bp);
+    this.reportSvc.setFinding(bp);
     this.loading.set(true);
     await this.reportSvc.generate();
     this.loading.set(false);

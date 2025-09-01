@@ -1,21 +1,23 @@
 export interface AuditReport {
-  issue: string;
-  risk: string;
-  recommendation: string;
-  root_cause: string;
+  title: string;
+  issues: string;
+  risks: string;
+  recommendations: string;
+  root_causes: string;
 }
 
 export interface GeneratePayload {
-  bulletPoints: string;
+  finding: string;
 }
 
 export interface ReportState {
-  bulletPoints: string;
+  finding: string;
   loading: boolean;
   report: AuditReport | null;
   error: string | null;
   error_message: string | null
   history: {
+    open: boolean;
     timestamp: number;
     input: string;
     output: AuditReport | null
