@@ -1,6 +1,5 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReportFormComponent } from './features/report-form/report-form.component';
 import { ReportViewComponent } from './features/report-view/report-view.component';
 import { HistoryPanelComponent } from './features/history-panel/history-panel.component';
@@ -13,7 +12,6 @@ import { copyToClipboard } from './core/utils/copy.utils';
   standalone: true,
   imports: [
     CommonModule,
-    FontAwesomeModule,
     ReportFormComponent,
     ReportViewComponent,
     HistoryPanelComponent,
@@ -23,9 +21,13 @@ import { copyToClipboard } from './core/utils/copy.utils';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  // Simple UI state via signals
+  @ViewChild('reportForm') reportForm!: ReportFormComponent;
+
   readonly hasReport = computed(() => !!this.reportSvc.currentReport());
-  constructor(public readonly reportSvc: ReportService) { }
+
+  constructor(
+    public readonly reportSvc: ReportService
+  ) { }
 
   copyAll(): void {
     const text = this.reportSvc.formatCurrentForClipboard();
@@ -35,7 +37,7 @@ export class AppComponent {
   }
 
   clearAll(): void {
-    this.reportSvc.clear();
+    this.reportForm.clear();
     this.reportSvc.toast.info('Cleared input and output');
   }
 }

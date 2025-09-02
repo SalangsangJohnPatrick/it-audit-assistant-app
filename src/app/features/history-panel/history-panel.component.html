@@ -1,22 +1,109 @@
-<h2 class="mb-4 text-xl font-semibold">History (latest 20)</h2>
+<div class="px-6 py-4 bg-gradient-to-r from-green-500 to-blue-500 border-b border-gray-100">
+  <h2 class="text-xl font-semibold text-white flex items-center gap-2">
+    <i class="fas fa-history text-white"></i>
+    History
+  </h2>
+</div>
 
-<div *ngIf="history().length === 0" class="text-slate-500">No history yet.</div>
-
-<ul class="divide-y divide-slate-200">
-  <li *ngFor="let h of history()"
-      class="py-3">
-    <div class="text-xs text-slate-500">{{ h.timestamp | date:'medium' }}</div>
-    <div class="mt-2 grid grid-cols-1 gap-3 md:grid-cols-2">
-      <div>
-        <div class="font-semibold">Input</div>
-        <pre class="rounded-lg bg-slate-50 p-2 text-xs whitespace-pre-wrap">{{ h.input }}</pre>
-      </div>
-      <div>
-        <div class="font-semibold">Output (Issue)</div>
-        <div class="text-sm text-slate-800">
-          {{ h.output?.issue || '—' }}
-        </div>
-      </div>
+<div class="p-6 flex-1 overflow-auto">
+  <!-- Empty state -->
+  <div *ngIf="history().length === 0" class="text-center py-12">
+    <div class="text-gray-300 mb-4">
+      <i class="fas fa-clock text-4xl"></i>
     </div>
-  </li>
-</ul>
+    <p class="text-gray-500 font-medium">No history yet.</p>
+    <p class="text-sm text-gray-400 mt-1">Generated findings will appear here</p>
+  </div>
+
+  <!-- Accordion list -->
+    <ul *ngIf="history().length > 0" class="space-y-3">
+      <li *ngFor="let h of history()" class="border rounded-lg shadow-sm bg-white overflow-hidden">
+        <!-- Accordion header -->
+        <button
+          type="button"
+          class="w-full flex justify-between items-center px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50"
+          (click)="h.open = !h.open"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-gray-700 font-semibold">{{ h.output?.title }}</span>
+            <span class="text-gray-600 text-xs">{{ h.timestamp | date: 'short' }}</span>
+          </div>
+          <i
+            class="fas"
+            [ngClass]="h.open ? 'fa-chevron-up text-gray-500' : 'fa-chevron-down text-gray-400'"
+          ></i>
+        </button>
+    
+        <!-- Accordion content -->
+        <div *ngIf="h.open" class="border-t border-gray-100 bg-gray-50 p-4 space-y-5">
+          <!-- Input -->
+          <div>
+            <div class="font-semibold text-gray-700 mb-2 flex items-center gap-1">
+              <i class="fas fa-arrow-right text-blue-500 text-xs"></i>
+              Input
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <pre class="text-xs text-gray-700 whitespace-normal font-mono">{{ h.input }}</pre>
+            </div>
+          </div>
+    
+          <!-- Outputs -->
+          <div class="grid md:grid-cols-2 gap-4">
+            <!-- Issues -->
+            <div>
+              <div class="font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                <i class="fas fa-exclamation-circle text-red-500 text-xs"></i>
+                Issues
+              </div>
+              <div class="bg-red-50 rounded-lg p-3 border border-red-200">
+                <pre class="text-xs text-gray-700 whitespace-normal font-mono">
+    {{ h.output?.issues || 'No issues detected' }}
+                </pre>
+              </div>
+            </div>
+    
+            <!-- Risks -->
+            <div>
+              <div class="font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                <div class="text-amber-500 text-xs">
+                    <fa-icon [icon]="['fas', 'triangle-exclamation']"></fa-icon>
+                </div>
+                Risk
+              </div>
+              <div class="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                <pre class="text-xs text-gray-700 whitespace-normal font-mono">
+    {{ h.output?.risks || 'No risks identified' }}
+                </pre>
+              </div>
+            </div>
+    
+            <!-- Recommendations -->
+            <div>
+              <div class="font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                <i class="fas fa-lightbulb text-green-500 text-xs"></i>
+                Recommendations
+              </div>
+              <div class="bg-green-50 rounded-lg p-3 border border-green-200">
+                <pre class="text-xs text-gray-700 whitespace-normal font-mono">
+    {{ h.output?.recommendations || 'No recommendations available' }}
+                </pre>
+              </div>
+            </div>
+    
+            <!-- Root Causes -->
+            <div>
+              <div class="font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                <i class="fas fa-search text-blue-500 text-xs"></i>
+                Root Causes
+              </div>
+              <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                <pre class="text-xs text-gray-700 whitespace-normal font-mono">
+    {{ h.output?.root_causes || 'No root causes identified' }}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+</div>

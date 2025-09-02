@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faWandMagicSparkles, faBroom } from '@fortawesome/free-solid-svg-icons';
 import { ReportService } from '../../core/services/report.service';
 
 @Component({
@@ -12,21 +11,13 @@ import { ReportService } from '../../core/services/report.service';
   templateUrl: './report-form.component.html',
   styleUrl: './report-form.component.css'
 })
-export class ReportFormComponent {
+export class ReportFormComponent {  
   private fb = inject(FormBuilder);
   readonly reportSvc = inject(ReportService);
 
-  faGen = faWandMagicSparkles;
-  faClear = faBroom;
-
   form = this.fb.nonNullable.group({
     bulletPoints: [
-      `- Default passwords remain enabled on admin accounts
-- MFA disabled for VPN users
-- Password policy exception for privileged roles
-- No periodic access review for terminated employees
-- Shared service account without logging`,
-      [Validators.required, Validators.minLength(5)]
+      '', [Validators.required, Validators.minLength(5)]
     ]
   });
 
@@ -34,9 +25,12 @@ export class ReportFormComponent {
 
   async generate(): Promise<void> {
     this.form.markAllAsTouched();
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.reportSvc.toast.warn('Please enter bullet points first.');
+      return;
+    };
     const bp = this.form.controls.bulletPoints.value.trim();
-    this.reportSvc.setBulletPoints(bp);
+    this.reportSvc.setFinding(bp);
     this.loading.set(true);
     await this.reportSvc.generate();
     this.loading.set(false);

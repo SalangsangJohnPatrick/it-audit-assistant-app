@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { ApiService } from './api.service';
 import { ReportState } from '../../models/audit-report.model';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -6,32 +6,35 @@ import { ToastService } from '../../shared/components/toast/toast.service';
 @Injectable({ providedIn: 'root' })
 export class ReportService {
   readonly state = signal<ReportState>({
-    bulletPoints: '',
+    finding: '',
     loading: false,
     report: null,
     error: null,
+    error_message: null,
     history: []
   });
 
   constructor(
-    private api: ApiService, 
-    public readonly toast: ToastService) {}
+    private api: ApiService,
+    public readonly toast: ToastService
+  ) { }
 
   currentReport() { return this.state().report; }
 
-  setBulletPoints(v: string): void {
-    this.state.update(s => ({ ...s, bulletPoints: v }));
+  hasInputOrOutput = computed(() => {
+    const { finding, report } = this.state();
+    return !!finding?.trim() || !!report;
+  });
+
+  setFinding(v: string): void {
+    this.state.update(s => ({ ...s, finding: v }));
   }
 
   async generate(): Promise<void> {
-    const { bulletPoints } = this.state();
-    if (!bulletPoints?.trim()) {
-      this.toast.warn('Please enter bullet points first.');
-      return;
-    }
-    this.state.update(s => ({ ...s, loading: true, error: null }));
+    const { finding } = this.state();
+    this.state.update(s => ({ ...s, loading: true, report: null, error: null }));
     try {
-      const res = await this.api.generateReport({ bulletPoints }).toPromise();
+      const res = await this.api.generateReport({ finding }).toPromise();
       if (!res) throw new Error('No response');
       if (res.ok) {
         const report = res.report;
@@ -39,35 +42,44 @@ export class ReportService {
           ...s,
           report,
           loading: false,
-          history: [{ timestamp: Date.now(), input: bulletPoints, output: report }, ...s.history].slice(0, 20)
+          history: [{ open: false, timestamp: Date.now(), input: finding, output: report }, ...s.history].slice(0, 20)
         }));
+        console.log('Generated report:', res.report);
         this.toast.success('Generated finding successfully');
       } else {
         throw new Error(res.error ?? 'Failed to generate');
       }
     } catch (err: any) {
-      const msg = err?.message ?? 'Unexpected error';
-      this.state.update(s => ({ ...s, error: msg, loading: false }));
-      this.toast.error(msg);
+      if (err?.status === 0) {
+        this.state.update(s => ({
+          ...s,
+          error: 'Network Error: Failed to connect to server',
+          error_message: 'Please check your connection and try again',
+          loading: false
+        }));
+      } else {
+        this.state.update(s => ({
+          ...s,
+          error: err?.error.error,
+          error_message: err?.status + ' - ' + err?.statusText,
+          loading: false
+        }));
+      }
     }
   }
 
   clear(): void {
-    this.state.update(s => ({ ...s, bulletPoints: '', report: null, error: null }));
+    this.state.update(s => ({ ...s, finding: '', report: null, error: null }));
   }
 
   formatCurrentForClipboard(): string | null {
     const r = this.state().report;
     if (!r) return null;
-    const rec = Array.isArray(r.recommendation)
-      ? r.recommendation.join('\n- ')
-      : r.recommendation;
     return [
-      `Issue:\n${r.issue}`,
-      `Risk:\n${r.risk}`,
-      `Recommendation:\n${Array.isArray(r.recommendation) ? '- ' : ''}${rec}`,
-      `Root Cause:\n${r.root_cause}`,
-      `Management Response:\n${r.management_response}`
+      `Issue:\n${r.issues}`,
+      `Risk:\n${r.risks}`,
+      `Recommendation:\n${r.risks}`,
+      `Root Cause:\n${r.root_causes}`
     ].join('\n\n');
   }
 }

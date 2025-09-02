@@ -1,21 +1,28 @@
-<h2 class="mb-4 text-xl font-semibold">Raw Notes / Test Results</h2>
-<div class="space-y-3">
-  <textarea rows="12" [formControl]="form.controls.bulletPoints"
-    placeholder="- Observation 1
-- Observation 2"></textarea>
+<div class="flex items-center gap-4">
+  <!-- Textarea -->
+  <div class="relative flex-1">
+    <textarea 
+        rows="2" 
+        [formControl]="form.controls.bulletPoints"
+        class="w-full pl-4 pr-10 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 bg-white outline-none"
+        placeholder="What's your finding?"></textarea>
 
-  <div class="flex items-center gap-3">
-    <button class="btn btn-primary" (click)="generate()">
-      <fa-icon icon="wand-magic-sparkles"></fa-icon>
-      Generate Findings
-    </button>
-    <button class="btn btn-ghost" type="button" (click)="clear()">
-      <fa-icon icon="broom"></fa-icon>
-      Clear
-    </button>
+    <!-- Tooltip Icon inside textarea -->
+    <div class="absolute right-3 top-3 group">
+      <i class="fas fa-lightbulb text-blue-600 text-base cursor-pointer"></i>
+      <!-- Tooltip -->
+      <div class="absolute right-4 top-5 -translate-y-1/2 ml-2 w-48 px-3 py-2 text-xs bg-blue-50 rounded-lg border border-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-md pointer-events-none">
+        <p class="text-xs text-blue-800">
+          <strong>Tip:</strong> Paste your test results or observations here.
+        </p>
+      </div>
+    </div>
   </div>
-
-  <div class="text-sm text-slate-500">
-    Tip: paste bullets, then click “Generate Findings”.
-  </div>
+    <button 
+      class="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+      (click)="generate()">
+        <i class="fas fa-magic text-green-300"></i>
+        Generate
+    </button>
 </div>
+
