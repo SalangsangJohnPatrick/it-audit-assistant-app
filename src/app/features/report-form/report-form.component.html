@@ -1,33 +1,28 @@
-<div class="px-6 py-4 bg-gradient-to-r from-green-500 to-blue-500 border-b border-gray-100">
-    <h2 class="text-xl font-semibold text-white flex items-center gap-2">
-        <i class="fas fa-edit text-blue-600"></i>
-        Initial Observations
-    </h2>
-</div>
-<div class="p-6 space-y-4">
-    <div class="relative">
-        <textarea 
-            rows="12" 
-            [formControl]="form.controls.bulletPoints"
-            class="w-full pl-4 pr-6 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white outline-none"
-            placeholder="Insert your notes or test results here"></textarea>
-        <div class="absolute top-3 right-3 text-xs text-gray-400">
-            <i class="fas fa-list-ul"></i>
-        </div>
-    </div>
-    
-    <div class="flex items-center gap-3 pt-2">
-        <button class="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-          (click)="generate()">
-            <i class="fas fa-magic text-green-300"></i>
-            Generate Report
-        </button>
-    </div>
-    
-    <div class="flex items-start gap-2 p-3 bg-blue-50 rounded-lg border border-blue-100">
-        <i class="fas fa-lightbulb text-blue-600 mt-0.5 text-sm"></i>
-        <p class="text-sm text-blue-800">
-            <strong>Tip:</strong> Paste your bullet points or observations, then click "Generate Findings" to create professional audit documentation.
+<div class="flex items-center gap-4">
+  <!-- Textarea -->
+  <div class="relative flex-1">
+    <textarea 
+        rows="2" 
+        [formControl]="form.controls.bulletPoints"
+        class="w-full pl-4 pr-10 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 bg-white outline-none"
+        placeholder="What's your finding?"></textarea>
+
+    <!-- Tooltip Icon inside textarea -->
+    <div class="absolute right-3 top-3 group">
+      <i class="fas fa-lightbulb text-blue-600 text-base cursor-pointer"></i>
+      <!-- Tooltip -->
+      <div class="absolute right-4 top-5 -translate-y-1/2 ml-2 w-48 px-3 py-2 text-xs bg-blue-50 rounded-lg border border-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-md pointer-events-none">
+        <p class="text-xs text-blue-800">
+          <strong>Tip:</strong> Paste your test results or observations here.
         </p>
+      </div>
     </div>
+  </div>
+    <button 
+      class="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+      (click)="generate()">
+        <i class="fas fa-magic text-green-300"></i>
+        Generate
+    </button>
 </div>
+

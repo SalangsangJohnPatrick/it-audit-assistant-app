@@ -28,13 +28,15 @@
       </div>
   </header>
 
-  <main class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-    <section class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-      <report-form #reportForm></report-form>
+  <main class="relative bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col">
+    <section class="flex-1 overflow-y-auto">
+      <report-view></report-view>
     </section>
 
-    <section class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-      <report-view></report-view>
+    <section class="border-t border-gray-200 bg-gray-50 p-4 flex justify-center">
+      <div class="w-full">
+        <report-form #reportForm></report-form>
+      </div>
     </section>
   </main>
 
