@@ -44,7 +44,6 @@ export class ReportService {
           loading: false,
           history: [{ open: false, timestamp: Date.now(), input: finding, output: report }, ...s.history].slice(0, 20)
         }));
-        console.log('Generated report:', res.report);
         this.toast.success('Generated finding successfully');
       } else {
         throw new Error(res.error ?? 'Failed to generate');
